@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodBites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .navbar a {
+            color: #fff !important;
+            font-weight: bold;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-custom {
+            background-color: black;
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: white;
+            color: black;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .switch-link {
+            color: #fff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        section {
+            padding: 50px 0;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            margin-top: 60px;
+        }
+
+        .btn-section {
+            margin-top: 20px;
+        }
+
+        #moodResult {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">MoodBites</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#signup">Signup</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="text-center">
+            <h1>Welcome to MoodBites</h1>
+            <p class="lead">Discover food and activities tailored to your mood.</p>
+            <a href="#signup" class="btn btn-custom btn-section">Get Started</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About MoodBites</h2>
+        <p>
+            MoodBites is an innovative platform designed to suggest personalized recipes and activities based on your current mood.
+        </p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 MoodBites. All Rights Reserved.</p>
+    </footer>
+
+    <section id="login">
+        <div class="form-container">
+            <h3 class="text-center">Login</h3>
+            <form onsubmit="loginSuccess(event)">
+                <div class="mb-3">
+                    <label for="loginUsername" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="loginUsername" required>
+                </div>
+                <div class="mb-3">
+                    <label for="loginPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Login</button>
+            </form>
+            <p class="mt-3 text-center">Don't have an account? <span class="switch-link" onclick="switchToSignup()">Sign up here</span>.</p>
+        </div>
+    </section>
+
+    <section id="signup">
+        <div class="form-container" id="signupForm">
+            <h3 class="text-center">Signup</h3>
+            <form onsubmit="signupSuccess(event)">
+                <div class="mb-3">
+                    <label for="signupUsername" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="signupUsername" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signupEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="signupEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signupPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" required oninput="checkPasswordStrength()">
+                    <p id="strengthMessage"></p>
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Signup</button>
+            </form>
+            <p class="mt-3 text-center">Already have an account? <span class="switch-link" onclick="switchToLogin()">Login here</span>.</p>
+        </div>
+    </section>
+
+    <section id="questions" style="display:none;">
+        <h3 class="text-center">Answer These Questions</h3>
+        <div id="questionsContainer"></div>
+        <button class="btn btn-custom w-100" onclick="askRandomQuestions()">Start Mood Assessment</button>
+        <div id="moodResult"></div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let users = {};
+        let recipes = {
+                "Extremely Happy": {
+        vegetarian: {
+            name: "Vegetable Stir Fry",
+            ingredients: [
+                "Mixed Vegetables (bell peppers, broccoli, carrots)",
+                "Soy Sauce",
+                "Garlic",
+                "Ginger"
+            ],
+            process: "Stir fry the vegetables with minced garlic and ginger in a bit of oil. Add soy sauce and cook for a few minutes until vegetables are tender.",
+            benefits: "Boosts mood with colorful vegetables rich in vitamins and minerals."
+        },
+        nonVegetarian: {
+            name: "Grilled Chicken Salad",
+            ingredients: [
+                "Chicken Breast",
+                "Lettuce",
+                "Cherry Tomatoes",
+                "Olive Oil"
+            ],
+            process: "Grill the chicken until fully cooked. Slice and mix with lettuce and cherry tomatoes. Drizzle with olive oil.",
+            benefits: "High in protein, improves energy levels, and promotes satiety."
+        }
+    },
+    "Happy": {
+        vegetarian: {
+            name: "Chickpea Curry",
+            ingredients: [
+                "Chickpeas",
+                "Coconut Milk",
+                "Curry Powder",
+                "Spinach"
+            ],
+            process: "Cook chickpeas with spices and coconut milk. Add spinach before serving and simmer until wilted.",
+            benefits: "Rich in fiber and protein, helps maintain energy and fullness."
+        },
+        nonVegetarian: {
+            name: "Spicy Fish Tacos",
+            ingredients: [
+                "Fish (e.g., tilapia)",
+                "Tortillas",
+                "Cabbage",
+                "Avocado"
+            ],
+            process: "Cook fish with spices, serve in tortillas topped with shredded cabbage and sliced avocado.",
+            benefits: "High in omega-3 fatty acids, beneficial for heart health."
+        }
+    },
+    "Positive": {
+        vegetarian: {
+            name: "Quinoa Salad",
+            ingredients: [
+                "Quinoa",
+                "Cucumber",
+                "Bell Peppers",
+                "Lemon Juice"
+            ],
+            process: "Cook quinoa, let it cool, and mix with chopped cucumber and bell peppers. Dress with lemon juice.",
+            benefits: "High in protein and fiber, helps regulate blood sugar levels."
+        },
+        nonVegetarian: {
+            name: "Chicken Stir Fry",
+            ingredients: [
+                "Chicken Thighs",
+                "Mixed Vegetables",
+                "Teriyaki Sauce"
+            ],
+            process: "Stir fry chicken with mixed vegetables and teriyaki sauce until cooked through.",
+            benefits: "High in protein, helps build and repair tissues."
+        }
+    },
+    "Relaxed": {
+        vegetarian: {
+            name: "Avocado Toast",
+            ingredients: [
+                "Whole Grain Bread",
+                "Avocado",
+                "Cherry Tomatoes",
+                "Salt and Pepper"
+            ],
+            process: "Toast bread, mash avocado on top, and add sliced cherry tomatoes, salt, and pepper.",
+            benefits: "Healthy fats from avocado help promote relaxation."
+        },
+        nonVegetarian: {
+            name: "Baked Salmon",
+            ingredients: [
+                "Salmon Fillet",
+                "Olive Oil",
+                "Lemon",
+                "Herbs (dill or parsley)"
+            ],
+            process: "Drizzle salmon with olive oil, lemon juice, and herbs, then bake until flaky.",
+            benefits: "Rich in omega-3 fatty acids, which are known to support mental health."
+        }
+    },
+    "Neutral": {
+        vegetarian: {
+            name: "Vegetable Soup",
+            ingredients: [
+                "Carrots",
+                "Celery",
+                "Tomatoes",
+                "Vegetable Broth"
+            ],
+            process: "Sauté vegetables in a pot, add broth, and simmer until vegetables are soft.",
+            benefits: "Hydrating and nutritious, helps maintain balance."
+        },
+        nonVegetarian: {
+            name: "Chicken Noodle Soup",
+            ingredients: [
+                "Chicken Breast",
+                "Egg Noodles",
+                "Carrots",
+                "Chicken Broth"
+            ],
+            process: "Cook chicken and vegetables in broth, add noodles, and simmer until cooked.",
+            benefits: "Comfort food that provides warmth and hydration."
+        }
+    },
+    "Confused": {
+        vegetarian: {
+            name: "Spinach and Feta Stuffed Peppers",
+            ingredients: [
+                "Bell Peppers",
+                "Spinach",
+                "Feta Cheese",
+                "Rice"
+            ],
+            process: "Mix cooked rice, spinach, and feta. Stuff into halved bell peppers and bake.",
+            benefits: "Nutrient-dense, helps clarify thoughts."
+        },
+        nonVegetarian: {
+            name: "Turkey and Cheese Wrap",
+            ingredients: [
+                "Turkey Slices",
+                "Cheese",
+                "Tortilla",
+                "Lettuce"
+            ],
+            process: "Roll turkey, cheese, and lettuce in a tortilla and slice.",
+            benefits: "Quick and easy, provides a mental boost."
+        }
+    },
+    "Anxious": {
+        vegetarian: {
+            name: "Oatmeal with Berries",
+            ingredients: [
+                "Oats",
+                "Milk or Almond Milk",
+                "Fresh Berries",
+                "Honey"
+            ],
+            process: "Cook oats with milk, top with berries and drizzle honey.",
+            benefits: "High in fiber and antioxidants, promotes calmness."
+        },
+        nonVegetarian: {
+            name: "Turkey Chili",
+            ingredients: [
+                "Ground Turkey",
+                "Beans",
+                "Tomatoes",
+                "Chili Powder"
+            ],
+            process: "Brown turkey, add beans and tomatoes, and simmer with spices.",
+            benefits: "High in protein and fiber, keeps you full and calm."
+        }
+    },
+    "Sad": {
+        vegetarian: {
+            name: "Comforting Mashed Potatoes",
+            ingredients: [
+                "Potatoes",
+                "Butter",
+                "Milk",
+                "Salt"
+            ],
+            process: "Boil potatoes, mash with butter and milk, season with salt.",
+            benefits: "Comfort food that promotes feelings of warmth and security."
+        },
+        nonVegetarian: {
+            name: "Beef Stew",
+            ingredients: [
+                "Beef",
+                "Potatoes",
+                "Carrots",
+                "Beef Broth"
+            ],
+            process: "Brown beef, add vegetables and broth, and simmer until tender.",
+            benefits: "Hearty meal that provides warmth and comfort."
+        }
+    },
+    "Frustrated": {
+        vegetarian: {
+            name: "Lentil Salad",
+            ingredients: [
+                "Lentils",
+                "Red Onion",
+                "Parsley",
+                "Olive Oil"
+            ],
+            process: "Cook lentils, mix with chopped onion and parsley, drizzle with olive oil.",
+            benefits: "High in fiber, helps improve mood and stabilize energy."
+        },
+        nonVegetarian: {
+            name: "Chicken Stir Fry",
+            ingredients: [
+                "Chicken",
+                "Broccoli",
+                "Soy Sauce"
+            ],
+            process: "Stir fry chicken and broccoli in soy sauce until cooked through.",
+            benefits: "Quick and easy to prepare, helps release frustration."
+        }
+    },
+    "Depressed": {
+        vegetarian: {
+            name: "Dark Chocolate Banana Smoothie",
+            ingredients: [
+                "Banana",
+                "Dark Chocolate",
+                "Almond Milk"
+            ],
+            process: "Blend banana, dark chocolate, and almond milk until smooth.",
+            benefits: "Dark chocolate contains compounds that can improve mood."
+        },
+        nonVegetarian: {
+            name: "Eggs and Spinach Scramble",
+            ingredients: [
+                "Eggs",
+                "Spinach",
+                "Feta Cheese"
+            ],
+            process: "Scramble eggs with spinach and top with feta.",
+            benefits: "Eggs are rich in nutrients that support brain health."
+        }
+    }
+  };
+
+        function loginSuccess(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (users[username] && users[username] === password) {
+                alert(`Login Successful! Welcome back, ${username}`);
+                $('#questions').show(); // Show questions section
+                $('html, body').animate({ scrollTop: $('#questions').offset().top }, 500);
+            } else {
+                alert('Incorrect username or password!');
+            }
+        }
+
+        function signupSuccess(event) {
+            event.preventDefault();
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+
+            if (users[username]) {
+                alert('User already exists! Please login.');
+            } else {
+                users[username] = password;
+                alert('Signup successful! Please log in.');
+                switchToLogin();
+            }
+        }
+
+        function switchToSignup() {
+            window.location.href = "#signup";
+        }
+
+        function switchToLogin() {
+            window.location.href = "#login";
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('signupPassword').value;
+            const strengthMessage = document.getElementById('strengthMessage');
+            const strengthCriteria = [
+                { regex: /.{8,}/, message: 'at least 8 characters' },
+                { regex: /[A-Z]/, message: 'an uppercase letter' },
+                { regex: /[a-z]/, message: 'a lowercase letter' },
+                { regex: /[0-9]/, message: 'a number' },
+                { regex: /[\W_]/, message: 'a special character' }
+            ];
+
+            let strength = strengthCriteria.reduce((count, criterion) => count + criterion.regex.test(password), 0);
+            let messages = strengthCriteria.filter(c => !c.regex.test(password)).map(c => c.message);
+
+            if (strength === 5) {
+                strengthMessage.textContent = "Strong password!";
+                strengthMessage.style.color = 'green';
+            } else {
+                strengthMessage.textContent = "Weak password! It should contain: " + messages.join(', ');
+                strengthMessage.style.color = 'red';
+            }
+        }
+
+        const questions = [
+             "How energetic do you feel right now? (1: Very Low - 10: Very High)",
+    "How stressed are you currently? (1: Not Stressed - 10: Extremely Stressed)",
+    "How happy do you feel? (1: Not Happy - 10: Extremely Happy)",
+    "How focused are you on your current task? (1: Very Distracted - 10: Highly Focused)",
+    "How relaxed do you feel? (1: Tensed - 10: Completely Relaxed)",
+    "How sad are you currently? (1: Not Sad - 10: Extremely Sad)",
+    "How motivated do you feel to start something new? (1: Not Motivated - 10: Highly Motivated)",
+    "How confident do you feel today? (1: Very Low - 10: Extremely Confident)",
+    "How irritated or annoyed are you? (1: Not Irritated - 10: Highly Irritated)",
+    "How satisfied are you with your current environment? (1: Not Satisfied - 10: Very Satisfied)",
+    "How calm is your mind right now? (1: Not Calm - 10: Extremely Calm)",
+    "How hopeful do you feel? (1: Not Hopeful - 10: Very Hopeful)",
+    "How tired are you at this moment? (1: Not Tired - 10: Exhausted)",
+    "How excited are you about your current activities? (1: Not Excited - 10: Extremely Excited)",
+    "How curious are you to learn something new today? (1: Not Curious - 10: Extremely Curious)",
+    "How much do you feel like socializing? (1: Not At All - 10: Very Much)",
+    "How anxious are you? (1: Not Anxious - 10: Extremely Anxious)",
+    "How overwhelmed do you feel right now? (1: Not Overwhelmed - 10: Highly Overwhelmed)",
+    "How positive are your thoughts? (1: Not Positive - 10: Very Positive)",
+    "How secure do you feel? (1: Not Secure - 10: Completely Secure)",
+    "How emotionally stable do you feel? (1: Unstable - 10: Very Stable)",
+    "How empathetic do you feel? (1: Not Empathetic - 10: Extremely Empathetic)",
+    "How angry are you at the moment? (1: Not Angry - 10: Extremely Angry)",
+    "How comfortable are you in your current surroundings? (1: Uncomfortable - 10: Very Comfortable)",
+    "How loved do you feel? (1: Not Loved - 10: Extremely Loved)",
+    "How frustrated are you? (1: Not Frustrated - 10: Very Frustrated)",
+    "How hopeful are you about the future? (1: Not Hopeful - 10: Very Hopeful)",
+    "How secure do you feel in your decisions? (1: Not Secure - 10: Completely Secure)",
+    "How bored are you right now? (1: Not Bored - 10: Extremely Bored)",
+    "How creative do you feel? (1: Not Creative - 10: Highly Creative)",
+    "How lonely do you feel? (1: Not Lonely - 10: Extremely Lonely)",
+    "How optimistic are you? (1: Not Optimistic - 10: Very Optimistic)",
+    "How organized is your current environment? (1: Very Disorganized - 10: Highly Organized)",
+    "How envious are you of others right now? (1: Not Envious - 10: Very Envious)",
+    "How playful do you feel? (1: Not Playful - 10: Very Playful)",
+    "How ambitious do you feel? (1: Not Ambitious - 10: Highly Ambitious)",
+    "How adventurous do you feel? (1: Not Adventurous - 10: Very Adventurous)",
+    "How guilty do you feel? (1: Not Guilty - 10: Extremely Guilty)",
+    "How jealous are you feeling? (1: Not Jealous - 10: Very Jealous)",
+    "How surprised are you? (1: Not Surprised - 10: Extremely Surprised)",
+    "How much do you feel like laughing right now? (1: Not At All - 10: Very Much)",
+    "How peaceful is your mind? (1: Not Peaceful - 10: Completely Peaceful)",
+    "How confident are you in expressing your opinions? (1: Not Confident - 10: Extremely Confident)",
+    "How connected do you feel with others? (1: Not Connected - 10: Very Connected)",
+    "How spiritually fulfilled do you feel? (1: Not Fulfilled - 10: Completely Fulfilled)",
+    "How self-aware do you feel? (1: Not Self-Aware - 10: Extremely Self-Aware)",
+    "How patient are you feeling right now? (1: Not Patient - 10: Extremely Patient)",
+    "How much do you feel like dancing or celebrating? (1: Not At All - 10: Very Much)",
+    "How open are you to new experiences today? (1: Not Open - 10: Very Open)",
+    "How much gratitude do you feel for your current situation? (1: Not Grateful - 10: Extremely Grateful)"        ];
+
+        function askRandomQuestions() {
+            $('#questionsContainer').empty();
+            const shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            shuffled.forEach((question, index) => {
+                $('#questionsContainer').append(`
+                    <div class="mb-3">
+                        <label>${question}</label>
+                        <input type="number" id="answer${index}" min="1" max="10" class="form-control" required>
+                    </div>
+                `);
+            });
+
+            $('#questionsContainer').append(`
+                <button class="btn btn-custom w-100" onclick="submitAnswers()">Submit</button>
+            `);
+        }
+
+       function submitAnswers() {
+    let totalScore = 0;
+
+    // Assuming you have three inputs with IDs 'answer0', 'answer1', and 'answer2'
+    for (let i = 0; i < 3; i++) {
+        totalScore += parseInt(document.getElementById(`answer${i}`).value) || 0;
+    }
+
+    // New mood prediction logic for 10 moods
+    let mood;
+    if (totalScore >= 28) {
+        mood = "Extremely Happy";
+    } else if (totalScore >= 24) {
+        mood = "Happy";
+    } else if (totalScore >= 20) {
+        mood = "Positive";
+    } else if (totalScore >= 16) {
+        mood = "Relaxed";
+    } else if (totalScore >= 12) {
+        mood = "Neutral";
+    } else if (totalScore >= 8) {
+        mood = "Confused";
+    } else if (totalScore >= 5) {
+        mood = "Anxious";
+    } else if (totalScore >= 3) {
+        mood = "Sad";
+    } else if (totalScore >= 1) {
+        mood = "Frustrated";
+    } else {
+        mood = "Depressed";
+    }
+
+    // Asking for dietary preference
+    const vegPreference = confirm("Do you prefer vegetarian recipes? (OK for Yes, Cancel for No)");
+
+    // Call the recipe suggestion function with the predicted mood and dietary preference
+    suggestRecipe(mood, vegPreference);
+}
+
+        function suggestRecipe(mood, isVeg) {
+            let recipe = recipes[mood];
+            if (!recipe) {
+                alert("No recipe found for this mood!");
+                return;
+            }
+
+            let recipeDetails = `
+                <h4>Suggested Recipe for ${mood}</h4>
+                <p><strong>Name:</strong> ${recipe.name}</p>
+                <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                <p><strong>Process:</strong> ${recipe.process}</p>
+                <p><strong>Benefits:</strong> ${recipe.benefits}</p>
+            `;
+
+            $('#moodResult').html(recipeDetails).show();
+            $('html, body').animate({ scrollTop: $('#moodResult').offset().top }, 500);
+        }
+    </script>
+<footer>
+<div class="bg-light text-center py-3">
+        <p class="text-dark mb-0">© 2024 MoodBites. All Rights Reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
